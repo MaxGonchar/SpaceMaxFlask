@@ -1,10 +1,10 @@
+from flask import current_app
 from authlib.jose import jwt
-
-from config import SECRET_KEY
 
 
 def get_payload(token):
     """Decode data form jwt"""
-    return dict(jwt.decode(token, SECRET_KEY))
+    print(current_app.config.get('SECRET_KEY'))
+    return dict(jwt.decode(token, current_app.config.get('SECRET_KEY')))
 
 
