@@ -30,3 +30,5 @@ venv
 space_venv
 .idea
 /key.pub
+#some help information for developer
+/help.txt
