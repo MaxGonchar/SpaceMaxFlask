@@ -23,5 +23,4 @@ def get_apod_data(url: str, date: str, hd: bool) -> dict:
 
 
 def upload_image(link: str, pas: str):
-    """"""
-
+    pass
