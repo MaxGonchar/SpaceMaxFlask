@@ -32,3 +32,4 @@ space_venv
 /key.pub
 #some help information for developer
 /help.txt
+/checking.py

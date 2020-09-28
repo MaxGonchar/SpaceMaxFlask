@@ -1,7 +1,9 @@
 import requests
 
+from api.errors import UnexpectedResponseError
 
-def get_apod_data(url: str, date: str, hd: bool) -> dict:
+
+def get_apod(url: str, date: str, hd: bool) -> dict:
     """
     Return link to picture of the day and picture's description.
 
@@ -14,13 +16,37 @@ def get_apod_data(url: str, date: str, hd: bool) -> dict:
         explanation: picture's description
         link: link for downloading.
     """
-    res = requests.get(url, params={'date': date}).json()
-    link = res['hdurl'] if hd else res['url']
+    response = requests.get(url, params={'date': date})
+    response.raise_for_status()
+    res = response.json()
+
+    try:
+        explanation = res['explanation']
+        link = res['hdurl'] if hd == 'True' else res['url']
+    except KeyError:
+        raise UnexpectedResponseError
+
     return {
-        'explanation': res['explanation'],
+        'explanation': explanation,
         'link': link
     }
 
 
-def upload_image(link: str, pas: str):
+def download_image(link: str, pas: str):
+    pass
+
+
+def get_jwt():
+    """
+    Good credentials - return None
+    Bad credentials - raise exception BadCredentials
+    """
+    pass
+
+
+def get_json():
+    """
+    Good data - return {'date': date: 'hd': hd}
+    Bad data - raise exception BadInputData
+    """
     pass
