@@ -1,9 +1,9 @@
 import requests
-import logging
 from http import HTTPStatus
 from flask import Flask, jsonify
 
 from api.dayimage import dayimage_api
+from api.errors import WrongCredentialsError
 
 app = Flask(__name__)
 
@@ -12,10 +12,15 @@ app.config.from_object('config.Config')
 app.register_blueprint(dayimage_api, url_prefix='/api/v1.0')
 
 
+@app.errorhandler(WrongCredentialsError)
+def handle_cred_error(error):
+    app.logger.exception(error)
+    return jsonify(error.json())
+
+
 @app.errorhandler(Exception)
 def handle_error(error):
-    app.logger.error(error)
-    logging.exception(error)
+    app.logger.exception(error)
 
     if isinstance(error, requests.exceptions.HTTPError):
         status_code = error.response.status_code
