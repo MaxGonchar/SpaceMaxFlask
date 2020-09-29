@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify, current_app
 
-from api.utils import get_apod, get_json, get_jwt, download_image
+from api.utils import get_apod, get_jwt, get_json, download_image
 
 dayimage_api = Blueprint('dayimage', __name__)
 
@@ -8,19 +8,27 @@ dayimage_api = Blueprint('dayimage', __name__)
 @dayimage_api.route('/dayimage', methods=['POST'])
 def dayimage():
     """
-    params:
-
+    get from NASA-APOD link to image and explanation
     save image to folder
     return:
         explanation:
+        link:
     """
+    #  get_jwt()
     url = current_app.config.get('APOD_URL')
-    # get_jwt() - will be later
-    # params = get_json() - will be later
-    # temporary, until I have not get_json()
+    #  params = get_json()
     params = request.get_json()
-    data = get_apod(
+    apod_data = get_apod(
         url, params['date'], params['hd']
     )
-    # download_image() - will be later
-    return jsonify(data)
+
+    explanation = apod_data['explanation']
+    link = apod_data['link']
+
+    #  download_image(link, path)
+
+    return jsonify({
+        'explanation': explanation,
+        'link': link
+    })
+

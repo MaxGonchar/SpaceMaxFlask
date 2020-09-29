@@ -1,7 +1,5 @@
 import requests
 
-from api.errors import UnexpectedResponseError
-
 
 def get_apod(url: str, date: str, hd: bool) -> dict:
     """
@@ -20,11 +18,8 @@ def get_apod(url: str, date: str, hd: bool) -> dict:
     response.raise_for_status()
     res = response.json()
 
-    try:
-        explanation = res['explanation']
-        link = res['hdurl'] if hd == 'True' else res['url']
-    except KeyError:
-        raise UnexpectedResponseError
+    explanation = res['explanation']
+    link = res['hdurl'] if hd == 'True' else res['url']
 
     return {
         'explanation': explanation,
@@ -32,7 +27,7 @@ def get_apod(url: str, date: str, hd: bool) -> dict:
     }
 
 
-def download_image(link: str, pas: str):
+def download_image(link: str, path: str):
     pass
 
 
@@ -44,9 +39,13 @@ def get_jwt():
     pass
 
 
-def get_json():
-    """
-    Good data - return {'date': date: 'hd': hd}
-    Bad data - raise exception BadInputData
-    """
+def get_json() -> dict:
     pass
+
+
+# def jsonify_data():
+#     pass
+
+
+# def jsonify_error():
+#     pass
