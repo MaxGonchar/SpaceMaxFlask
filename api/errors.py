@@ -1,15 +1,19 @@
 from http import HTTPStatus
 
 
-class WrongCredentialsError(Exception):
-
-    def __init__(self):
-        super().__init__('Wrong credentials')
-        self.message = 'Wrong credentials'
-        self.status_code = HTTPStatus.BAD_REQUEST
+class SMFError(Exception):
+    def __init__(self, message, status_code):
+        self.message = message
+        self.status_code = status_code
 
     def json(self):
         return {
             'status_code': self.status_code,
             'message': self.message
         }
+
+
+class WrongCredentialsError(SMFError):
+
+    def __init__(self):
+        super().__init__('Wrong credentials', HTTPStatus.BAD_REQUEST)

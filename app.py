@@ -3,7 +3,7 @@ from http import HTTPStatus
 from flask import Flask, jsonify
 
 from api.dayimage import dayimage_api
-from api.errors import WrongCredentialsError
+from api.errors import SMFError
 
 app = Flask(__name__)
 
@@ -12,7 +12,7 @@ app.config.from_object('config.Config')
 app.register_blueprint(dayimage_api, url_prefix='/api/v1.0')
 
 
-@app.errorhandler(WrongCredentialsError)
+@app.errorhandler(SMFError)
 def handle_cred_error(error):
     app.logger.exception(error)
     return jsonify(error.json())
