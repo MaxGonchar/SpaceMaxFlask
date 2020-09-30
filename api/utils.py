@@ -1,8 +1,9 @@
 import requests
+from http import HTTPStatus
 from authlib.jose import jwt
 from flask import current_app, request
 
-from api.errors import WrongCredentialsError
+from api.errors import WrongCredentialsError, WrongAPODInputDataError
 
 
 def get_apod(url: str, params: dict) -> dict:
@@ -53,8 +54,18 @@ def get_jwt():
     return jwt.decode(token, current_app.config['SECRET_KEY'])['key']
 
 
-def get_json() -> dict:
-    pass
+def get_json(schema) -> dict:
+    """
+    Validate input data for APOD.
+    """
+    data = request.get_json()
+    errors = schema.validate(data)
+    if errors:
+        raise WrongAPODInputDataError(
+            ' '.join(sum(errors.values(), [])),
+            HTTPStatus.BAD_REQUEST
+        )
+    return data
 
 
 def download_image(link: str, path: str):
