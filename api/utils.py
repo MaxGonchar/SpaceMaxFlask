@@ -1,5 +1,5 @@
 import requests
-from http import HTTPStatus
+import os
 from authlib.jose import jwt
 from flask import current_app, request
 
@@ -71,8 +71,14 @@ def get_json(schema) -> dict:
     return data
 
 
-def download_image(link: str, path: str):
-    pass
+def download_image(link: str, name: str):
+    """
+    Download image to MEDIA_FOLDER.
+    If file with same name exists, it will be rewritten.
+    """
+    path = os.getcwd() + current_app.config['MEDIA_FOLDER'] + name + '.jpg'
+    with open(path, 'wb') as file:
+        file.write(requests.get(link).content)
 
 
 def jsonify_data():
