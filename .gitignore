@@ -31,5 +31,6 @@ space_venv
 .idea
 /key.pub
 #some help information for developer
-/help.txt
-/checking.py
+/some_help_materials/help.txt
+/some_help_materials/checking.py
+/some_help_materials/

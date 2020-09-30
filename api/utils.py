@@ -1,51 +1,69 @@
 import requests
+from authlib.jose import jwt
+from flask import current_app, request
+
+from api.errors import WrongCredentialsError
 
 
-def get_apod(url: str, date: str, hd: bool) -> dict:
+def get_apod(url: str, params: dict) -> dict:
     """
     Return link to picture of the day and picture's description.
 
     params:
         url: NASA "APOD"-api's endpoint;
-        date: date for day's picture;
-        hd: True - high definition, False - lowe definition;
+        params: for request
+            api_key: NASA token;
+            date: date for day's picture;
+            hd: True - high definition, False - lowe definition;
 
     return - dict, where
         explanation: picture's description
         link: link for downloading.
     """
-    response = requests.get(url, params={'date': date})
+    response = requests.get(url, params=params)
     response.raise_for_status()
     res = response.json()
 
-    explanation = res['explanation']
-    link = res['hdurl'] if hd == 'True' else res['url']
+    link = res['hdurl'] if params['hd'] == 'True' else res['url']
 
     return {
-        'explanation': explanation,
+        'explanation': res['explanation'],
         'link': link
     }
 
 
-def download_image(link: str, path: str):
-    pass
+def url_for(endpoint: str) -> str:
+    """
+    Make URL for NASA endpoint
+    path: additional path to NASA_API
+    """
+    return current_app.config.get('NASA_API').format(endpoint=endpoint)
 
 
 def get_jwt():
     """
-    Good credentials - return None
-    Bad credentials - raise exception BadCredentials
+    Validate credentials and decode NASA api_key from jwt
     """
-    pass
+    try:
+        scheme, token = request.headers['Authorization'].split()
+        assert scheme.lower() == 'bearer'
+    except (KeyError, ValueError, AssertionError):
+        raise WrongCredentialsError
+
+    return jwt.decode(token, current_app.config['SECRET_KEY'])['key']
 
 
 def get_json() -> dict:
     pass
 
 
-# def jsonify_data():
-#     pass
+def download_image(link: str, path: str):
+    pass
 
 
-# def jsonify_error():
-#     pass
+def jsonify_data():
+    pass
+
+
+def jsonify_error():
+    pass

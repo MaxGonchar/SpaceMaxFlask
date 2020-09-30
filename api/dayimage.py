@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify, current_app
 
-from api.utils import get_apod, get_jwt, get_json, download_image
+from api.utils import get_apod, get_jwt, get_json, download_image, url_for
 
 dayimage_api = Blueprint('dayimage', __name__)
 
@@ -14,21 +14,11 @@ def dayimage():
         explanation:
         link:
     """
-    #  get_jwt()
-    url = current_app.config.get('APOD_URL')
-    #  params = get_json()
-    params = request.get_json()
-    apod_data = get_apod(
-        url, params['date'], params['hd']
-    )
-
-    explanation = apod_data['explanation']
-    link = apod_data['link']
-
-    #  download_image(link, path)
+    params = {'api_key': get_jwt(), **request.get_json()}
+    apod_data = get_apod(url_for('planetary/apod'), params)
 
     return jsonify({
-        'explanation': explanation,
-        'link': link
+        'explanation': apod_data['explanation'],
+        'link': apod_data['link']
     })
 
