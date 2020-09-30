@@ -19,7 +19,7 @@ class WrongCredentialsError(SMFError):
         super().__init__('Wrong credentials', HTTPStatus.BAD_REQUEST)
 
 
-class WrongAPODInputDataError(SMFError):
+class RequestDataError(SMFError):
 
-    def __init__(self, message, status_code):
-        super().__init__(message, status_code)
+    def __init__(self, message):
+        super().__init__(message, status_code=HTTPStatus.BAD_REQUEST)

@@ -16,7 +16,9 @@ def dayimage():
         link:
     """
     params = {'api_key': get_jwt(), **get_json(APODParamsSchema())}
-    apod_data = get_apod(url_for('planetary/apod'), params)
+    apod_data = get_apod(
+        url_for(current_app.config.get('NASA_ENDPOINTS')['apod']), params
+    )
 
     return jsonify({
         'explanation': apod_data['explanation'],

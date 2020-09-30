@@ -1,5 +1,6 @@
 from datetime import date
-from marshmallow import Schema, fields, ValidationError
+from marshmallow import Schema, ValidationError
+from marshmallow.fields import Date, Bool
 
 
 def validate_date(data):
@@ -9,18 +10,10 @@ def validate_date(data):
         raise ValidationError('Date can be in range 1995-06-20 ... now!')
 
 
-def validate_hd(hd):
-    if hd not in ['True', 'False']:
-        raise ValidationError('hd must be one of: True or False!')
-
-
 class APODParamsSchema(Schema):
-    date = fields.Date(
+    date = Date(
         format='%Y-%m-%d',
         validate=validate_date,
         required=True
     )
-    hd = fields.String(
-        validate=validate_hd,
-        required=True
-    )
+    hd = Bool(required=True)
