@@ -36,8 +36,8 @@ def dayimage():
     if apod_data['link'].endswith('.jpg'):
         name = params['date'] + '_hd' if params['hd'] else params['date']
         save_file(
-            get_path_to_save(name), 
-            download_file(apod_data['link'])
+            path=get_path_to_save(name),
+            data=download_file(apod_data['link'])
         )
         message = IMAGE_DOWNLOADED.format(link=get_path_to_save(name))
     else:
