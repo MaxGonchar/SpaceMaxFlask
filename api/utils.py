@@ -1,5 +1,5 @@
 import requests
-from http import HTTPStatus
+import os
 from authlib.jose import jwt
 from flask import current_app, request
 
@@ -19,7 +19,7 @@ def get_apod(url: str, params: dict) -> dict:
 
     return - dict, where
         explanation: picture's description
-        link: link for downloading.
+        link: link to resource.
     """
     response = requests.get(url, params=params)
     response.raise_for_status()
@@ -37,7 +37,7 @@ def get_apod(url: str, params: dict) -> dict:
 def url_for(endpoint: str) -> str:
     """
     Make URL for NASA endpoint
-    path: additional path to NASA_API
+    endpoint: additional path to NASA_API
     """
     return current_app.config.get('NASA_API').format(endpoint=endpoint)
 
@@ -71,8 +71,42 @@ def get_json(schema) -> dict:
     return data
 
 
-def download_image(link: str, path: str):
-    pass
+def get_path_to_save(name: str, ext='.jpg') -> str:
+    """
+    Make path with file name and extension to folder for file needed to save.
+    params:
+        name: file name
+        ext: extension
+    return:
+        fool path with name in the end
+    """
+    return os.path.join(
+        os.getcwd(),
+        current_app.config['MEDIA_FOLDER'],
+        name + ext
+    )
+
+
+def download_file(link: str) -> bytes:
+    """
+    Download image from link
+    params:
+        link
+    return:
+        file in bites
+    """
+    return requests.get(link).content
+
+
+def save_file(path: str, data: bytes):
+    """
+    Save file to folder. If file with same name exists, it will be rewritten
+    params:
+        path: fool path with name in the end
+        data: file in bites
+    """
+    with open(path, 'wb') as file:
+        file.write(data)
 
 
 def jsonify_data():
