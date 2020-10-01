@@ -71,14 +71,38 @@ def get_json(schema) -> dict:
     return data
 
 
-def download_image(link: str, name: str):
+def get_path_to_save(name: str, ext='.jpg') -> str:
     """
-    Download image to MEDIA_FOLDER.
-    If file with same name exists, it will be rewritten.
+    Make path with file name and extension to folder for file needed to save.
+    params:
+        name: file name
+        ext: extension
+    return:
+        fool path with name in the end
     """
-    path = os.getcwd() + current_app.config['MEDIA_FOLDER'] + name + '.jpg'
+    return os.getcwd() + current_app.config['MEDIA_FOLDER'] + name + ext
+
+
+def download_file(link: str) -> bytes:
+    """
+    Download image from link
+    params:
+        link
+    return:
+        file in bites
+    """
+    return requests.get(link).content
+
+
+def save_file(path: str, data: bytes):
+    """
+    Save file to folder. If file with same name exists, it will be rewritten
+    params:
+        path: fool path with name in the end
+        data: file in bites
+    """
     with open(path, 'wb') as file:
-        file.write(requests.get(link).content)
+        file.write(data)
 
 
 def jsonify_data():
