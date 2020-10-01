@@ -1,8 +1,9 @@
 import requests
+from http import HTTPStatus
 from authlib.jose import jwt
 from flask import current_app, request
 
-from api.errors import WrongCredentialsError
+from api.errors import WrongCredentialsError, RequestDataError
 
 
 def get_apod(url: str, params: dict) -> dict:
@@ -24,7 +25,8 @@ def get_apod(url: str, params: dict) -> dict:
     response.raise_for_status()
     res = response.json()
 
-    link = res['hdurl'] if params['hd'] == 'True' else res['url']
+    # not in all day's json 'hdurl' exists
+    link = res['hdurl'] if params['hd'] and res.get('hdurl') else res['url']
 
     return {
         'explanation': res['explanation'],
@@ -53,8 +55,20 @@ def get_jwt():
     return jwt.decode(token, current_app.config['SECRET_KEY'])['key']
 
 
-def get_json() -> dict:
-    pass
+def get_json(schema) -> dict:
+    """
+    Get data from request,
+    validate, using marshmallow's schema and return it in dict
+    params:
+        schema: marshmallow's schema for validation
+    return:
+        data in dict
+    """
+    data = request.get_json()
+    errors = schema.validate(data)
+    if errors:
+        raise RequestDataError('\n'.join(sum(errors.values(), [])))
+    return data
 
 
 def download_image(link: str, path: str):
