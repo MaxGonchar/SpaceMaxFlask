@@ -12,7 +12,7 @@ def dayimage():
     get from NASA-APOD link to video resource and explanation
     if resource is image, save it to folder, otherwise return only link
     return:
-        explanation:
+        explanation: text followed with media resource
         message: about resource and actions with it if there was.
     """
     params = {'api_key': get_jwt(), **get_json(APODParamsSchema())}
