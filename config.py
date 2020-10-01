@@ -9,4 +9,4 @@ class Config:
         'apod': 'planetary/apod'
     }
 
-    MEDIA_FOLDER = '/media/'
+    MEDIA_FOLDER = 'media'

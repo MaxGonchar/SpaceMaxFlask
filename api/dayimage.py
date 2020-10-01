@@ -14,7 +14,7 @@ from api.schemas import APODParamsSchema
 dayimage_api = Blueprint('dayimage', __name__)
 
 IMAGE_DOWNLOADED = 'Image successfully downloaded, link: {link}'
-NO_IMAGE = 'There are no jpg images on the date indicated,'  \
+IMAGE_NOT_FOUND = 'There are no jpg images on the date indicated,'  \
            'the material can be found at the link {link}'
 
 
@@ -35,10 +35,13 @@ def dayimage():
     #  link can be not only to image, for example, to video in youtube.
     if apod_data['link'].endswith('.jpg'):
         name = params['date'] + '_hd' if params['hd'] else params['date']
-        save_file(get_path_to_save(name), download_file(apod_data['link']))
+        save_file(
+            get_path_to_save(name), 
+            download_file(apod_data['link'])
+        )
         message = IMAGE_DOWNLOADED.format(link=get_path_to_save(name))
     else:
-        message = NO_IMAGE.format(link=apod_data['link'])
+        message = IMAGE_NOT_FOUND.format(link=apod_data['link'])
 
     return jsonify({
         'explanation': apod_data['explanation'],

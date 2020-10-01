@@ -80,7 +80,11 @@ def get_path_to_save(name: str, ext='.jpg') -> str:
     return:
         fool path with name in the end
     """
-    return os.getcwd() + current_app.config['MEDIA_FOLDER'] + name + ext
+    return os.path.join(
+        os.getcwd(),
+        current_app.config['MEDIA_FOLDER'],
+        name + ext
+    )
 
 
 def download_file(link: str) -> bytes:
