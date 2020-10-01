@@ -19,7 +19,7 @@ def get_apod(url: str, params: dict) -> dict:
 
     return - dict, where
         explanation: picture's description
-        link: link for downloading.
+        link: link to resource.
     """
     response = requests.get(url, params=params)
     response.raise_for_status()

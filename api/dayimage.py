@@ -9,11 +9,11 @@ dayimage_api = Blueprint('dayimage', __name__)
 @dayimage_api.route('/dayimage', methods=['POST'])
 def dayimage():
     """
-    get from NASA-APOD link to image and explanation
-    save image to folder
+    get from NASA-APOD link to video resource and explanation
+    if resource is image, save it to folder, otherwise return only link
     return:
         explanation:
-        link:
+        message: about resource and actions with it if there was.
     """
     params = {'api_key': get_jwt(), **get_json(APODParamsSchema())}
     apod_data = get_apod(
