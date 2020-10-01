@@ -37,7 +37,7 @@ def get_apod(url: str, params: dict) -> dict:
 def url_for(endpoint: str) -> str:
     """
     Make URL for NASA endpoint
-    path: additional path to NASA_API
+    endpoint: additional path to NASA_API
     """
     return current_app.config.get('NASA_API').format(endpoint=endpoint)
 
