@@ -6,7 +6,8 @@ class Config:
 
     NASA_API = 'https://api.nasa.gov/{endpoint}'
     NASA_ENDPOINTS = {
-        'apod': 'planetary/apod'
+        'apod': 'planetary/apod',
+        'cme': 'DONKI/CME'
     }
 
     MEDIA_FOLDER = 'media'

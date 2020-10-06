@@ -35,6 +35,10 @@ def get_apod(url: str, params: dict) -> dict:
     }
 
 
+def get_cme(url: str, params: dict) -> dict:
+    pass
+
+
 def url_for(endpoint: str) -> str:
     """
     Make URL for NASA endpoint
@@ -56,7 +60,7 @@ def get_jwt():
     return jwt.decode(token, current_app.config['SECRET_KEY'])['key']
 
 
-def get_json(schema) -> dict:
+def get_params(schema) -> dict:
     """
     Get data from request,
     validate, using marshmallow's schema and return it in dict
@@ -65,8 +69,16 @@ def get_json(schema) -> dict:
     return:
         data in dict
     """
-    data = request.get_json()
+    data = {}
+    if request.method == 'POST':
+        data = request.get_json()
+    elif request.method == 'GET':
+        data = dict(request.args)
+    else:
+        raise RequestDataError(f'{request.method} is unsupported method')
+
     errors = schema.validate(data)
+
     if errors:
         raise RequestDataError('\n'.join(sum(errors.values(), [])))
     return data

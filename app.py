@@ -4,6 +4,7 @@ import requests
 from flask import Flask, jsonify
 
 from api.dayimage import dayimage_api
+from api.cme import cme_api
 from api.errors import SMFError
 
 app = Flask(__name__)
@@ -11,6 +12,7 @@ app = Flask(__name__)
 app.config.from_object('config.Config')
 
 app.register_blueprint(dayimage_api, url_prefix='/api/v1.0')
+app.register_blueprint(cme_api, url_prefix='/api/v1.0')
 
 
 @app.errorhandler(SMFError)

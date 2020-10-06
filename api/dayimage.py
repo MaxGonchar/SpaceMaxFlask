@@ -3,7 +3,7 @@ from flask import Blueprint, jsonify, current_app
 from api.utils import (
     get_apod,
     get_jwt,
-    get_json,
+    get_params,
     url_for,
     get_path_to_save,
     download_file,
@@ -27,7 +27,7 @@ def dayimage():
         explanation: text followed with media resource
         message: about resource and actions with it if there was.
     """
-    params = {'api_key': get_jwt(), **get_json(APODParamsSchema())}
+    params = {'api_key': get_jwt(), **get_params(APODParamsSchema())}
     apod_data = get_apod(
         url_for(current_app.config.get('NASA_ENDPOINTS')['apod']), params
     )

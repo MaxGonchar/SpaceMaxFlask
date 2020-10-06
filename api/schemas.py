@@ -18,3 +18,14 @@ class APODParamsSchema(Schema):
         required=True
     )
     hd = Bool(required=True)
+
+
+class CMEParamsSchema(Schema):
+    startDate = Date(
+        format='%Y-%m-%d',
+        required=True
+    )
+    endDate = Date(
+        format='%Y-%m-%d',
+        required=True
+    )
