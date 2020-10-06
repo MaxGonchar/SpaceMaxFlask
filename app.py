@@ -1,5 +1,6 @@
-import requests
 from http import HTTPStatus
+
+import requests
 from flask import Flask, jsonify
 
 from api.dayimage import dayimage_api

@@ -1,5 +1,6 @@
-import requests
 import os
+
+import requests
 from authlib.jose import jwt
 from flask import current_app, request
 

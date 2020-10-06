@@ -1,4 +1,5 @@
 from datetime import date
+
 from marshmallow import Schema, ValidationError
 from marshmallow.fields import Date, Bool
 
