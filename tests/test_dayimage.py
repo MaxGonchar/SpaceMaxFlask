@@ -1,92 +1,77 @@
 from unittest.mock import patch
+from unittest.mock import Mock
 from http import HTTPStatus
 
 from tests.base_test_class import BaseSMFTest
 from tests.mocks_requirements_for_tests import (
     VALID_APOD_RESPONSE_DATA,
     INVALID_APOD_RESPONSE_DATA,
-
     REQUIRED_DAYIMAGE_RESPONSE_OK,
     REQUIRED_DAYIMAGE_RESPONSE_WRONG_JWT,
     DREQUIRED_AYIMAGE_RESPONSE_INVALID_APOD_DATA
 )
 
 
-@patch('api.dayimage.download_file')
-@patch('api.dayimage.save_file')
-@patch('requests.get')
 class DayImageTest(BaseSMFTest):
-    DAYIMAGE_ENDPOINT = '/api/v1.0/dayimage'
-    REQUEST_PARAMS = {"date": "2020-09-20", "hd": True}
-    REQUEST_CONTENT_TYPE = 'application/json'
-    WRONG_JWT = 'wrong_jwt'
+    dayimage_endpoint = '/api/v1.0/dayimage'
+    request_params = {"date": "2020-09-20", "hd": True}
+    request_content_type = 'application/json'
+    wrong_jwt = 'wrong_jwt'
 
+    @patch('api.dayimage.save_file')
+    @patch('os.getcwd')
+    @patch('requests.get')
     def test_dayimage_all_is_valid(
             self,
             mock_get,
-            mock_save_file,
-            mock_download_file
+            mock_os_getcwd,
+            mock_get_content
     ):
+        mock_os_getcwd.return_value = '/Users/mhonc/Projects/SpaceMaxFlask'
         mock_get.return_value = self.get_mock_data(
             VALID_APOD_RESPONSE_DATA,
             HTTPStatus.OK
         )
-
         response = self.client.post(
-            self.DAYIMAGE_ENDPOINT,
+            self.dayimage_endpoint,
             headers=self.get_headers(
                 self.jwt_token,
-                content_type=self.REQUEST_CONTENT_TYPE
+                content_type=self.request_content_type
             ),
-            json=self.REQUEST_PARAMS
+            json=self.request_params
         )
         expected_result = REQUIRED_DAYIMAGE_RESPONSE_OK
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json, expected_result)
 
-    def test_dayimage_wrong_jwt(
-            self,
-            mock_get,
-            mock_save_file,
-            mock_download_file
-    ):
-        mock_get.return_value = self.get_mock_data(
-            VALID_APOD_RESPONSE_DATA,
-            HTTPStatus.OK
-        )
-
+    def test_dayimage_wrong_jwt(self,):
         response = self.client.post(
-            self.DAYIMAGE_ENDPOINT,
+            self.dayimage_endpoint,
             headers=self.get_headers(
-                self.WRONG_JWT,
-                content_type=self.REQUEST_CONTENT_TYPE
+                self.wrong_jwt,
+                content_type=self.request_content_type
             ),
-            json=self.REQUEST_PARAMS,
+            json=self.request_params,
         )
         expected_result = REQUIRED_DAYIMAGE_RESPONSE_WRONG_JWT
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json, expected_result)
 
-    def test_dayimage_invalid_apod_data(
-            self,
-            mock_get,
-            mock_save_file,
-            mock_download_file
-    ):
+    @patch('requests.get')
+    def test_dayimage_invalid_apod_data(self, mock_get):
         mock_get.return_value = self.get_mock_data(
             INVALID_APOD_RESPONSE_DATA,
             HTTPStatus.OK
         )
-
         response = self.client.post(
-            self.DAYIMAGE_ENDPOINT,
+            self.dayimage_endpoint,
             headers=self.get_headers(
                 self.jwt_token,
-                content_type=self.REQUEST_CONTENT_TYPE
+                content_type=self.request_content_type
             ),
-            json=self.REQUEST_PARAMS
+            json=self.request_params
         )
         expected_result = DREQUIRED_AYIMAGE_RESPONSE_INVALID_APOD_DATA
 

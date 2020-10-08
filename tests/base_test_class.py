@@ -8,21 +8,20 @@ from app import app
 
 class BaseSMFTest(TestCase):
     jwt_token = None
-    SECRETE_KEY = 'test'
-    ENCODING_HEADER = {'alg': 'HS256'}
-    ENCODING_PAYLOAD = {'key': 'NASA_token'}
-
-    REQUEST_HEADERS_KEY = 'Authorization'
-    REQUEST_HEADERS_VALUE = 'bearer {jwt_token}'
+    secrete_key = 'test'
+    encoding_header = {'alg': 'HS256'}
+    encoding_payload = {'key': 'NASA_token'}
+    request_headers_key = 'Authorization'
+    request_headers_value = 'bearer {jwt_token}'
 
     @classmethod
     def setUpClass(cls) -> None:
-        cls.jwt_token = jwt.encode(cls.ENCODING_HEADER,
-                                   cls.ENCODING_PAYLOAD,
-                                   cls.SECRETE_KEY).decode('utf-8')
+        cls.jwt_token = jwt.encode(cls.encoding_header,
+                                   cls.encoding_payload,
+                                   cls.secrete_key).decode('utf-8')
 
     def setUp(self) -> None:
-        app.secret_key = self.SECRETE_KEY
+        app.secret_key = self.secrete_key
         self.client = app.test_client()
         self.jwt_token = self.jwt_token
 
@@ -35,7 +34,7 @@ class BaseSMFTest(TestCase):
 
     def get_headers(self, jwt_token: str, content_type=None) -> dict:
         headers = {
-            self.REQUEST_HEADERS_KEY: self.REQUEST_HEADERS_VALUE.format(
+            self.request_headers_key: self.request_headers_value.format(
                 jwt_token=jwt_token
             )
         }

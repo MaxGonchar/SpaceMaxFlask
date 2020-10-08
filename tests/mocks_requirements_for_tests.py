@@ -9,7 +9,7 @@ INVALID_APOD_RESPONSE_DATA = {"explanation": "Something is going wrong"}
 REQUIRED_DAYIMAGE_RESPONSE_OK = {
     'explanation': 'Some explanation',
     'message': 'Image successfully downloaded, link:'
-               ' /Users/mhonc/Projects/SpaceMaxFlask/tests/media/'
+               ' /Users/mhonc/Projects/SpaceMaxFlask/media/'
                '2020-09-20_hd.jpg'
 }
 REQUIRED_DAYIMAGE_RESPONSE_WRONG_JWT = {
