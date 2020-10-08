@@ -26,10 +26,18 @@ class BaseSMFTest(TestCase):
         self.jwt_token = self.jwt_token
 
     @staticmethod
-    def get_mock_data(data, status):
+    def get_mock_requests(
+            json=None,
+            status=None,
+            content=None
+    ):
         mock_data = Mock()
-        mock_data.json.return_value = data
-        mock_data.status_code = status
+        if json:
+            mock_data.json.return_value = json
+        if status:
+            mock_data.status_code = status
+        if content:
+            mock_data.content = content
         return mock_data
 
     def get_headers(self, jwt_token: str, content_type=None) -> dict:

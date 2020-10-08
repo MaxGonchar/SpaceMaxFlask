@@ -1,5 +1,5 @@
+import builtins
 from unittest.mock import patch
-from unittest.mock import Mock
 from http import HTTPStatus
 
 from tests.base_test_class import BaseSMFTest
@@ -18,20 +18,24 @@ class DayImageTest(BaseSMFTest):
     request_content_type = 'application/json'
     wrong_jwt = 'wrong_jwt'
 
-    @patch('api.dayimage.save_file')
+    @patch('builtins.open')
     @patch('os.getcwd')
     @patch('requests.get')
     def test_dayimage_all_is_valid(
             self,
-            mock_get,
+            mock_requests,
             mock_os_getcwd,
-            mock_get_content
+            mosk_open
     ):
         mock_os_getcwd.return_value = '/Users/mhonc/Projects/SpaceMaxFlask'
-        mock_get.return_value = self.get_mock_data(
-            VALID_APOD_RESPONSE_DATA,
-            HTTPStatus.OK
-        )
+        mock_requests.side_effect = [
+            self.get_mock_requests(
+                json=VALID_APOD_RESPONSE_DATA,
+                status=HTTPStatus.OK
+            ),
+            self.get_mock_requests(content=b'picture')
+        ]
+
         response = self.client.post(
             self.dayimage_endpoint,
             headers=self.get_headers(
@@ -45,7 +49,7 @@ class DayImageTest(BaseSMFTest):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json, expected_result)
 
-    def test_dayimage_wrong_jwt(self,):
+    def test_dayimage_wrong_jwt(self, ):
         response = self.client.post(
             self.dayimage_endpoint,
             headers=self.get_headers(
@@ -61,9 +65,9 @@ class DayImageTest(BaseSMFTest):
 
     @patch('requests.get')
     def test_dayimage_invalid_apod_data(self, mock_get):
-        mock_get.return_value = self.get_mock_data(
-            INVALID_APOD_RESPONSE_DATA,
-            HTTPStatus.OK
+        mock_get.return_value = self.get_mock_requests(
+            json=INVALID_APOD_RESPONSE_DATA,
+            status=HTTPStatus.OK
         )
         response = self.client.post(
             self.dayimage_endpoint,
