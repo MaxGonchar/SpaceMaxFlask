@@ -7,7 +7,7 @@ from flask import current_app, request
 from api.errors import WrongCredentialsError, RequestDataError
 
 
-def get_apod(url: str, params: dict) -> dict:
+def get_apod(url: str, params: dict, ep_name: str) -> dict:
     """
     Return link to picture of the day and picture's description.
 
@@ -22,21 +22,26 @@ def get_apod(url: str, params: dict) -> dict:
         explanation: picture's description
         link: link to resource.
     """
-    response = requests.get(url, params=params)
+    response = requests.get(url, params=params,)
     response.raise_for_status()
     res = response.json()
 
-    # not in all day's json 'hdurl' exists
-    link = res['hdurl'] if params['hd'] and res.get('hdurl') else res['url']
+    if ep_name == 'apod':
+        # not in all day's json 'hdurl' exists
+        link = res['hdurl'] if params['hd'] and res.get('hdurl') else res[
+           'url']
+        return {
+            'explanation': res['explanation'],
+            'link': link
+        }
+    elif ep_name == 'cme':
+        return res
 
-    return {
-        'explanation': res['explanation'],
-        'link': link
-    }
 
-
-def get_cme(url: str, params: dict) -> dict:
-    pass
+# def get_cme(url: str, params: dict) -> dict:
+#     """"""
+#     response = requests.get(url, params=params)
+#     response.raise_for_status()
 
 
 def url_for(endpoint: str) -> str:
@@ -62,7 +67,7 @@ def get_jwt():
 
 def get_params(schema) -> dict:
     """
-    Get data from request,
+    Get user params from request according to method,
     validate, using marshmallow's schema and return it in dict
     params:
         schema: marshmallow's schema for validation
@@ -70,14 +75,16 @@ def get_params(schema) -> dict:
         data in dict
     """
     data = {}
+    errors = {}
     if request.method == 'POST':
         data = request.get_json()
+        errors = schema.validate(data)
     elif request.method == 'GET':
         data = dict(request.args)
     else:
         raise RequestDataError(f'{request.method} is unsupported method')
 
-    errors = schema.validate(data)
+    # errors = schema.validate(data)
 
     if errors:
         raise RequestDataError('\n'.join(sum(errors.values(), [])))

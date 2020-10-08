@@ -29,7 +29,9 @@ def dayimage():
     """
     params = {'api_key': get_jwt(), **get_params(APODParamsSchema())}
     apod_data = get_apod(
-        url_for(current_app.config.get('NASA_ENDPOINTS')['apod']), params
+        url_for(current_app.config.get('NASA_ENDPOINTS')['apod']),
+        params,
+        'apod'
     )
 
     #  link can be not only to image, for example, to video in youtube.
