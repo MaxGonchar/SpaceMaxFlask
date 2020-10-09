@@ -109,11 +109,3 @@ def save_file(path: str, data: bytes):
     """
     with open(path, 'wb') as file:
         file.write(data)
-
-
-def jsonify_data():
-    pass
-
-
-def jsonify_error():
-    pass
