@@ -21,12 +21,8 @@ class DayImageTest(BaseSMFTest):
     @patch('builtins.open')
     @patch('os.getcwd')
     @patch('requests.get')
-    def test_dayimage_all_is_valid(
-            self,
-            mock_requests,
-            mock_os_getcwd,
-            mosk_open
-    ):
+    def test_dayimage_all_is_valid(self, mock_requests, mock_os_getcwd,
+                                   mosk_open):
         mock_os_getcwd.return_value = '/Users/mhonc/Projects/SpaceMaxFlask'
         mock_requests.side_effect = [
             self.get_mock_requests(
@@ -37,7 +33,7 @@ class DayImageTest(BaseSMFTest):
         ]
 
         response = self.client.post(
-            self.dayimage_endpoint,
+            path=self.dayimage_endpoint,
             headers=self.get_headers(
                 self.jwt_token,
                 content_type=self.request_content_type
@@ -49,7 +45,7 @@ class DayImageTest(BaseSMFTest):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json, expected_result)
 
-    def test_dayimage_wrong_jwt(self, ):
+    def test_dayimage_wrong_jwt(self):
         response = self.client.post(
             self.dayimage_endpoint,
             headers=self.get_headers(

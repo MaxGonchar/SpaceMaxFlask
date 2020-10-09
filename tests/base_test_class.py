@@ -11,8 +11,6 @@ class BaseSMFTest(TestCase):
     secrete_key = 'test'
     encoding_header = {'alg': 'HS256'}
     encoding_payload = {'key': 'NASA_token'}
-    request_headers_key = 'Authorization'
-    request_headers_value = 'bearer {jwt_token}'
 
     @classmethod
     def setUpClass(cls) -> None:
@@ -26,11 +24,7 @@ class BaseSMFTest(TestCase):
         self.jwt_token = self.jwt_token
 
     @staticmethod
-    def get_mock_requests(
-            json=None,
-            status=None,
-            content=None
-    ):
+    def get_mock_requests(json=None, status=None, content=None):
         mock_data = Mock()
         if json:
             mock_data.json.return_value = json
@@ -41,11 +35,7 @@ class BaseSMFTest(TestCase):
         return mock_data
 
     def get_headers(self, jwt_token: str, content_type=None) -> dict:
-        headers = {
-            self.request_headers_key: self.request_headers_value.format(
-                jwt_token=jwt_token
-            )
-        }
+        headers = {'Authorization': f'bearer {jwt_token}'}
         if content_type:
             headers['Content-Type'] = content_type
         return headers
