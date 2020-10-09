@@ -47,7 +47,7 @@ class DayImageTest(BaseSMFTest):
 
     def test_dayimage_wrong_jwt(self):
         response = self.client.post(
-            self.dayimage_endpoint,
+            path=self.dayimage_endpoint,
             headers=self.get_headers(
                 self.wrong_jwt,
                 content_type=self.request_content_type
@@ -66,7 +66,7 @@ class DayImageTest(BaseSMFTest):
             status=HTTPStatus.OK
         )
         response = self.client.post(
-            self.dayimage_endpoint,
+            path=self.dayimage_endpoint,
             headers=self.get_headers(
                 self.jwt_token,
                 content_type=self.request_content_type
