@@ -6,42 +6,25 @@ from flask import current_app, request
 
 from api.errors import WrongCredentialsError, RequestDataError
 
+NO_DATA = {'Sorry': 'There are no data for the specified period.'}
 
-def get_apod(url: str, params: dict, ep_name: str) -> dict:
+
+def get_nasa_data(url: str, params: dict) -> dict:
     """
-    Return link to picture of the day and picture's description.
-
+    Get data from NASA endpoint.
     params:
-        url: NASA "APOD"-api's endpoint;
-        params: for request
-            api_key: NASA token;
-            date: date for day's picture;
-            hd: True - high definition, False - lowe definition;
-
-    return - dict, where
-        explanation: picture's description
-        link: link to resource.
+        url: endpoint;
+        params: params for request
+    return:
+        dict with data if it had been provided, else - NO_DATA message.
     """
-    response = requests.get(url, params=params,)
+    response = requests.get(url, params=params)
     response.raise_for_status()
-    res = response.json()
-
-    if ep_name == 'apod':
-        # not in all day's json 'hdurl' exists
-        link = res['hdurl'] if params['hd'] and res.get('hdurl') else res[
-           'url']
-        return {
-            'explanation': res['explanation'],
-            'link': link
-        }
-    elif ep_name == 'cme':
-        return res
-
-
-# def get_cme(url: str, params: dict) -> dict:
-#     """"""
-#     response = requests.get(url, params=params)
-#     response.raise_for_status()
+    if response.text:
+        res = response.json()
+    else:
+        res = NO_DATA
+    return res
 
 
 def url_for(endpoint: str) -> str:
@@ -75,16 +58,15 @@ def get_params(schema) -> dict:
         data in dict
     """
     data = {}
-    errors = {}
+    # errors = {}
     if request.method == 'POST':
         data = request.get_json()
         errors = schema.validate(data)
     elif request.method == 'GET':
         data = dict(request.args)
+        errors = schema.validate(data)
     else:
         raise RequestDataError(f'{request.method} is unsupported method')
-
-    # errors = schema.validate(data)
 
     if errors:
         raise RequestDataError('\n'.join(sum(errors.values(), [])))

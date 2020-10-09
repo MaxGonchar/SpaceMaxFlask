@@ -20,10 +20,16 @@ class APODParamsSchema(Schema):
     hd = Bool(required=True)
 
 
+def validate_startdate(data):
+    if not data <= CMEParamsSchema.endDate:
+        raise ValidationError('startDate mast be <= endDate')
+
+
 class CMEParamsSchema(Schema):
     startDate = Date(
         format='%Y-%m-%d',
-        required=True
+        required=True,
+        validate=validate_startdate
     )
     endDate = Date(
         format='%Y-%m-%d',
