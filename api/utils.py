@@ -35,7 +35,7 @@ def url_for(endpoint: str) -> str:
     return current_app.config.get('NASA_API').format(endpoint=endpoint)
 
 
-def get_jwt():
+def get_jwt() -> [dict, Exception]:
     """
     Validate credentials and decode NASA api_key from jwt
     """
@@ -48,7 +48,7 @@ def get_jwt():
     return jwt.decode(token, current_app.config['SECRET_KEY'])['key']
 
 
-def get_json(schema):
+def get_json(schema) -> [dict, Exception]:
     """
     Get data from request's body,
     validate, using marshmallow's schema and return it in dict
@@ -65,7 +65,7 @@ def get_json(schema):
     return data
 
 
-def get_params(schema) -> dict:
+def get_params(schema) -> [dict, Exception]:
     """
     Get data from request's url,
     validate, using marshmallow's schema and return it in dict
@@ -109,7 +109,7 @@ def download_file(link: str) -> bytes:
     return requests.get(link).content
 
 
-def save_file(path: str, data: bytes):
+def save_file(path: str, data: bytes) -> None:
     """
     Save file to folder. If file with same name exists, it will be rewritten
     params:

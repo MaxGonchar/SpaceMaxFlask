@@ -48,8 +48,8 @@ def dayimage():
     """
     params = {'api_key': get_jwt(), **get_json(APODParamsSchema())}
     nasa_data = get_nasa_data(
-        url_for(current_app.config.get('NASA_ENDPOINTS')['apod']),
-        params
+        url=url_for(current_app.config.get('NASA_ENDPOINTS')['apod']),
+        params=params
     )
     apod_data = form_apod_data(nasa_data, params['hd'])
 

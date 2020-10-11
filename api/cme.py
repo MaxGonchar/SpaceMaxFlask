@@ -11,11 +11,13 @@ from api.utils import (
 cme_api = Blueprint('cme', __name__)
 
 
-def form_cme_data(data):
+def form_cme_data(data: [dict, list]) -> [dict, list]:
     """
     Form correct message for cme endpoint if nasa API has provided it
     params:
-        data: data from nasa API
+        data: data from nasa API:
+            list with data if there is;
+            dict with message if there isn't
     return:
         dict with info.
     """
@@ -43,8 +45,8 @@ def cme():
     """
     params = {'api_key': get_jwt(), **get_params(CMEParamsSchema())}
     nasa_data = get_nasa_data(
-        url_for(current_app.config.get('NASA_ENDPOINTS')['cme']),
-        params
+        url=url_for(current_app.config.get('NASA_ENDPOINTS')['cme']),
+        params=params
     )
     cme_data = form_cme_data(nasa_data)
     return jsonify(cme_data)
