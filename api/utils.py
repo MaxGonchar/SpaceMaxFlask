@@ -48,25 +48,34 @@ def get_jwt():
     return jwt.decode(token, current_app.config['SECRET_KEY'])['key']
 
 
-def get_params(schema) -> dict:
+def get_json(schema):
     """
-    Get user params from request according to method,
+    Get data from request's body,
     validate, using marshmallow's schema and return it in dict
     params:
         schema: marshmallow's schema for validation
     return:
         data in dict
     """
-    data = {}
-    # errors = {}
-    if request.method == 'POST':
-        data = request.get_json()
-        errors = schema.validate(data)
-    elif request.method == 'GET':
-        data = dict(request.args)
-        errors = schema.validate(data)
-    else:
-        raise RequestDataError(f'{request.method} is unsupported method')
+    data = request.get_json()
+    errors = schema.validate(data)
+
+    if errors:
+        raise RequestDataError('\n'.join(sum(errors.values(), [])))
+    return data
+
+
+def get_params(schema) -> dict:
+    """
+    Get data from request's url,
+    validate, using marshmallow's schema and return it in dict
+    params:
+        schema: marshmallow's schema for validation
+    return:
+        data in dict
+    """
+    data = dict(request.args)
+    errors = schema.validate(data)
 
     if errors:
         raise RequestDataError('\n'.join(sum(errors.values(), [])))

@@ -41,7 +41,7 @@ def cme():
     short description;
     link to Space Weather Database Of Notifications for each.
     """
-    params = {'api_key': get_jwt(), **get_params(CMEParamsSchema)}
+    params = {'api_key': get_jwt(), **get_params(CMEParamsSchema())}
     nasa_data = get_nasa_data(
         url_for(current_app.config.get('NASA_ENDPOINTS')['cme']),
         params

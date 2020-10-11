@@ -1,6 +1,6 @@
 from datetime import date
 
-from marshmallow import Schema, ValidationError
+from marshmallow import Schema, ValidationError, validates_schema
 from marshmallow.fields import Date, Bool
 
 
@@ -20,18 +20,17 @@ class APODParamsSchema(Schema):
     hd = Bool(required=True)
 
 
-def validate_startdate(data):
-    if not data <= CMEParamsSchema.endDate:
-        raise ValidationError('startDate mast be <= endDate')
-
-
 class CMEParamsSchema(Schema):
     startDate = Date(
         format='%Y-%m-%d',
         required=True,
-        validate=validate_startdate
     )
     endDate = Date(
         format='%Y-%m-%d',
         required=True
     )
+
+    @validates_schema()
+    def validate_date(self, data, **kwargs):
+        if not (data['startDate'] <= data['endDate']):
+            raise ValidationError('startDate mast be lower or equal endDate')
