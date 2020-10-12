@@ -22,7 +22,7 @@ class DayImageTest(BaseSMFTest):
     @patch('os.getcwd')
     @patch('requests.get')
     def test_dayimage_all_is_valid(self, mock_requests, mock_os_getcwd,
-                                   mosk_open):
+                                   mock_open):
         mock_os_getcwd.return_value = '/Users/mhonc/Projects/SpaceMaxFlask'
         mock_requests.side_effect = [
             self.get_mock_requests(
