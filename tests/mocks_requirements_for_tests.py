@@ -17,8 +17,8 @@ VALID_CME_RESPONSE_DATA = [
 ]
 
 REQUIRED_RESPONSE_WRONG_JWT = {
-            "message": "Invalid input segments length: ",
-            "status_code": 500
+            "message": "Wrong JWT structure",
+            "status_code": 401
 }
 
 REQUIRED_DAYIMAGE_RESPONSE_OK = {

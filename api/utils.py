@@ -2,9 +2,14 @@ import os
 
 import requests
 from authlib.jose import jwt
+from authlib.jose.errors import BadSignatureError, DecodeError
 from flask import current_app, request
 
-from api.errors import WrongCredentialsError, RequestDataError
+from api.errors import (
+    WrongCredentialsError,
+    RequestDataError,
+    AuthorizationError
+)
 
 NO_DATA = {'Sorry': 'There are no data for the specified period.'}
 
@@ -35,17 +40,42 @@ def url_for(endpoint: str) -> str:
     return current_app.config.get('NASA_API').format(endpoint=endpoint)
 
 
-def get_jwt() -> [dict, Exception]:
+def get_jwt_token() -> [str, Exception]:
     """
-    Validate credentials and decode NASA api_key from jwt
+    Parse incoming request's header to type and jwt token and validate them.
+    return:
+        jwt token if validation is passed
     """
+    expected_errors = {
+        KeyError: 'Authorization header is missed',
+        AssertionError: 'Wrong authorization type'
+    }
     try:
         scheme, token = request.headers['Authorization'].split()
         assert scheme.lower() == 'bearer'
-    except (KeyError, ValueError, AssertionError):
-        raise WrongCredentialsError
+        return token
+    except tuple(expected_errors) as error:
+        raise AuthorizationError(expected_errors[error.__class__])
 
-    return jwt.decode(token, current_app.config['SECRET_KEY'])['key']
+
+def get_auth_token() -> [str, Exception]:
+    """
+    Validate and decode jwt to get authorization token.
+    return:
+        authorization token if validation is passed.
+    """
+    expected_errors = {
+        KeyError: 'Wrong JWT payload structure',
+        TypeError: '<SECRET_KEY> is missing',
+        DecodeError: 'Wrong JWT structure',
+        BadSignatureError: 'Failed to decode JWT with provided key'
+    }
+    token = get_jwt_token()
+    try:
+        payload = jwt.decode(token, current_app.config['SECRET_KEY'])
+        return payload['key']
+    except tuple(expected_errors) as error:
+        raise AuthorizationError(expected_errors[error.__class__])
 
 
 def get_json(schema) -> [dict, Exception]:

@@ -2,7 +2,7 @@ from flask import Blueprint, jsonify, current_app
 
 from api.schemas import CMEParamsSchema
 from api.utils import (
-    get_jwt,
+    get_auth_token,
     get_params,
     url_for,
     get_nasa_data
@@ -43,7 +43,7 @@ def cme():
     short description;
     link to Space Weather Database Of Notifications for each.
     """
-    params = {'api_key': get_jwt(), **get_params(CMEParamsSchema())}
+    params = {'api_key': get_auth_token(), **get_params(CMEParamsSchema())}
     nasa_data = get_nasa_data(
         url=url_for(current_app.config.get('NASA_ENDPOINTS')['cme']),
         params=params
