@@ -7,7 +7,7 @@ from tests.mocks_requirements_for_tests import (
     VALID_APOD_RESPONSE_DATA,
     INVALID_APOD_RESPONSE_DATA,
     REQUIRED_DAYIMAGE_RESPONSE_OK,
-    REQUIRED_DAYIMAGE_RESPONSE_WRONG_JWT,
+    REQUIRED_RESPONSE_WRONG_JWT,
     DREQUIRED_AYIMAGE_RESPONSE_INVALID_APOD_DATA
 )
 
@@ -54,7 +54,7 @@ class DayImageTest(BaseSMFTest):
             ),
             json=self.request_params,
         )
-        expected_result = REQUIRED_DAYIMAGE_RESPONSE_WRONG_JWT
+        expected_result = REQUIRED_RESPONSE_WRONG_JWT
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json, expected_result)

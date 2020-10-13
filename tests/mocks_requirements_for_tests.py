@@ -16,16 +16,16 @@ VALID_CME_RESPONSE_DATA = [
     }
 ]
 
+REQUIRED_RESPONSE_WRONG_JWT = {
+            "message": "Invalid input segments length: ",
+            "status_code": 500
+}
 
 REQUIRED_DAYIMAGE_RESPONSE_OK = {
     'explanation': 'Some explanation',
     'message': 'Image successfully downloaded, link:'
                ' /Users/mhonc/Projects/SpaceMaxFlask/media/'
                '2020-09-20_hd.jpg'
-}
-REQUIRED_DAYIMAGE_RESPONSE_WRONG_JWT = {
-            "message": "Invalid input segments length: ",
-            "status_code": 500
 }
 DREQUIRED_AYIMAGE_RESPONSE_INVALID_APOD_DATA = {
             "message": "'url'",
