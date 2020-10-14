@@ -17,15 +17,13 @@ app.register_blueprint(cme_api, url_prefix='/api/v1.0')
 
 @app.errorhandler(SMFError)
 def handle_cred_error(error):
-    if not app.testing:
-        app.logger.exception(error)
+    app.logger.exception(error)
     return jsonify(error.json())
 
 
 @app.errorhandler(Exception)
 def handle_error(error):
-    if not app.testing:
-        app.logger.exception(error)
+    app.logger.exception(error)
 
     if isinstance(error, requests.exceptions.HTTPError):
         status_code = error.response.status_code
