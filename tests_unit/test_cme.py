@@ -10,7 +10,7 @@ from tests_unit.mocks_requirements_for_tests import (
 
 
 class CMETest(BaseSMFTest):
-    cme_endpoint = '/api/v1.0/cme'
+    cme_endpoint = '/api/cme'
     request_params = {'startDate': '2020-09-01', 'endDate': '2020-10-03'}
     wrong_jwt = 'wrong_jwt'
 

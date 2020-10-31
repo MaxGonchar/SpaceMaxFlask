@@ -13,7 +13,7 @@ from tests_unit.mocks_requirements_for_tests import (
 
 
 class DayImageTest(BaseSMFTest):
-    dayimage_endpoint = '/api/v1.0/dayimage'
+    dayimage_endpoint = '/api/dayimage'
     request_params = {"date": "2020-09-20", "hd": True}
     request_content_type = 'application/json'
     wrong_jwt = 'wrong_jwt'

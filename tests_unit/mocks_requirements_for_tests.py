@@ -17,8 +17,8 @@ VALID_CME_RESPONSE_DATA = [
 ]
 
 REQUIRED_RESPONSE_WRONG_JWT = {
-            "message": "Wrong JWT structure",
-            "status_code": 401
+    'code': 'authorization error',
+    'message': 'Wrong JWT structure'
 }
 
 REQUIRED_DAYIMAGE_RESPONSE_OK = {
