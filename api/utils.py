@@ -6,12 +6,9 @@ from authlib.jose.errors import BadSignatureError, DecodeError
 from flask import current_app, request
 
 from api.errors import (
-    WrongCredentialsError,
     RequestDataError,
     AuthorizationError
 )
-
-NO_DATA = {'Sorry': 'There are no data for the specified period.'}
 
 
 def get_nasa_data(url: str, params: dict) -> dict:
@@ -23,12 +20,14 @@ def get_nasa_data(url: str, params: dict) -> dict:
     return:
         dict with data if it had been provided, else - NO_DATA message.
     """
+    no_data = {'Sorry': 'There are no data for the specified period.'}
+
     response = requests.get(url, params=params)
     response.raise_for_status()
     if response.text:
         res = response.json()
     else:
-        res = NO_DATA
+        res = no_data
     return res
 
 

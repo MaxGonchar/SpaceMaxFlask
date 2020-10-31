@@ -2,8 +2,8 @@ import builtins
 from unittest.mock import patch
 from http import HTTPStatus
 
-from tests.base_test_class import BaseSMFTest
-from tests.mocks_requirements_for_tests import (
+from tests_unit.base_test_class import BaseSMFTest
+from tests_unit.mocks_requirements_for_tests import (
     VALID_APOD_RESPONSE_DATA,
     INVALID_APOD_RESPONSE_DATA,
     REQUIRED_DAYIMAGE_RESPONSE_OK,

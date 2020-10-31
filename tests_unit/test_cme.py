@@ -1,8 +1,8 @@
 from unittest.mock import patch
 from http import HTTPStatus
 
-from tests.base_test_class import BaseSMFTest
-from tests.mocks_requirements_for_tests import (
+from tests_unit.base_test_class import BaseSMFTest
+from tests_unit.mocks_requirements_for_tests import (
     VALID_CME_RESPONSE_DATA,
     REQUIRED_CME_RESPONSE_OK,
     REQUIRED_RESPONSE_WRONG_JWT

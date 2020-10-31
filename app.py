@@ -11,8 +11,8 @@ app = Flask(__name__)
 
 app.config.from_object('config.Config')
 
-app.register_blueprint(dayimage_api, url_prefix='/api/v1.0')
-app.register_blueprint(cme_api, url_prefix='/api/v1.0')
+app.register_blueprint(dayimage_api, url_prefix='/api')
+app.register_blueprint(cme_api, url_prefix='/api')
 
 
 @app.errorhandler(SMFError)

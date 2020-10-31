@@ -1,31 +1,28 @@
 from http import HTTPStatus
 
 
+AUTH_ERROR = 'authorization error'
+
+
 class SMFError(Exception):
-    def __init__(self, message, status_code):
+    def __init__(self, message, code):
         self.message = message
-        self.status_code = status_code
+        self.code = code
 
     def json(self):
         return {
-            'status_code': self.status_code,
+            'code': self.code,
             'message': self.message
         }
-
-
-class WrongCredentialsError(SMFError):
-
-    def __init__(self):
-        super().__init__('Wrong credentials', HTTPStatus.BAD_REQUEST)
 
 
 class RequestDataError(SMFError):
 
     def __init__(self, message):
-        super().__init__(message, status_code=HTTPStatus.BAD_REQUEST)
+        super().__init__(message, code=HTTPStatus.BAD_REQUEST)
 
 
 class AuthorizationError(SMFError):
 
     def __init__(self, message):
-        super().__init__(message, status_code=HTTPStatus.UNAUTHORIZED)
+        super().__init__(message, AUTH_ERROR)
