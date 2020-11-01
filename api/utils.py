@@ -1,4 +1,5 @@
 import os
+from http import HTTPStatus
 
 import requests
 from authlib.jose import jwt
@@ -23,7 +24,12 @@ def get_nasa_data(url: str, params: dict) -> dict:
     no_data = {'Sorry': 'There are no data for the specified period.'}
 
     response = requests.get(url, params=params)
+
+    if response.status_code == HTTPStatus.FORBIDDEN:
+        raise AuthorizationError('Wrong NASA API key')
+
     response.raise_for_status()
+
     if response.text:
         res = response.json()
     else:
@@ -47,7 +53,8 @@ def get_jwt_token() -> [str, Exception]:
     """
     expected_errors = {
         KeyError: 'Authorization header is missed',
-        AssertionError: 'Wrong authorization type'
+        AssertionError: 'Wrong authorization type',
+        ValueError: 'Incorrect jwt entering'
     }
     try:
         scheme, token = request.headers['Authorization'].split()
