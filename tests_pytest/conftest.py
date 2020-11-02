@@ -36,15 +36,3 @@ def valid_params():
         'startDate': '2020-09-30',
         'endDate': '2020-10-03'
     }
-
-
-# @fixture(scope='session')
-# def get_mock_requests(json=None, status=None, content=None):
-#     mock_data = Mock()
-#     if json:
-#         mock_data.json.return_value = json
-#     if status:
-#         mock_data.status_code = status
-#     if content:
-#         mock_data.content = content
-#     return mock_data

@@ -22,12 +22,12 @@ def form_cme_data(data: [dict, list]) -> [dict, list]:
         dict with info.
     """
     if isinstance(data, list):
-        res = [{'coronalMassEjectionQuantity': len(data)}, []]
+        res = [{'coronal_mass_ejection_quantity': len(data)}, []]
         for el in data:
             res[1].append({
-                'startTime': el['startTime'],
+                'start_time': el['startTime'],
                 'explanation': el['note'],
-                'link to DONKI': el['link']
+                'link_to_DONKI': el['link']
             })
         return res
     return data

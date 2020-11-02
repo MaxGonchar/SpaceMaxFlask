@@ -32,11 +32,6 @@ def route(request):
 
 
 @fixture(scope='module')
-def jwt_with_wrong_structure():
-    return 'jwt_with_wrong_structure'
-
-
-@fixture(scope='module')
 def jwt_with_wrong_payload_structure():
     header = {'alg': 'HS256'}
     payload = {'not_key': 'some_key'}
@@ -50,17 +45,6 @@ def jwt_encoded_by_wrong_key():
     payload = {'not_key': 'some_key'}
     key = 'wrong_key'
     return jwt.encode(header, payload, key).decode('ascii')
-
-
-def get_mock_requests(json=None, status=None, content=None):
-    mock_data = Mock()
-    if json:
-        mock_data.json.return_value = json
-    if status:
-        mock_data.status_code = status
-    if content:
-        mock_data.content = content
-    return mock_data
 
 
 def authorization_errors_expected_payload(message):
@@ -108,10 +92,10 @@ def test_call_with_incorrect_jwt_entering(
 
 
 def test_call_with_wrong_jwt_structure(
-        route, client, valid_json, jwt_with_wrong_structure, valid_params
+        route, client, valid_json, valid_params
 ):
     response = make_request(client, route,
-                            get_header(jwt_with_wrong_structure),
+                            get_header('jwt_with_wrong_structure'),
                             valid_json, valid_params)
 
     assert response.status_code == HTTPStatus.OK
